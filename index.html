@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fady Khayat | 3D artist for product CGI, FOOH ads and VR</title>
-<meta name="description" content="Fady Khayat is a 3D artist based in Beirut Lebanon, making product CGI, FOOH and VFX ads, and VR virtual tours in Blender.">
+<meta name="description" content="Fady Khayat is a 3D artist in Beirut making product CGI, FOOH and VFX ads, and VR virtual tours in Blender.">
 <meta property="og:title" content="Fady Khayat | 3D artist">
-<meta property="og:description" content="Product CGI, FOOH and VFX ads, and VR tours.">
+<meta property="og:description" content="Product CGI, FOOH and VFX ads, and VR virtual tours.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230a0a0b'/%3E%3Ctext x='50' y='68' font-size='54' font-family='Arial' font-weight='700' fill='white' text-anchor='middle'%3EFK%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +17,8 @@ SETUP (everything you edit is in the script at the bottom, inside the EDIT HERE 
 1. Put your images in an "images" folder next to this file. Names are listed in PROJECTS (img), plus fady.jpg for the portrait.
    Missing images show a dark placeholder.
 2. Add your Upwork, YouTube, TikTok and X links in LINKS. Empty ones are hidden.
-3. For each project add a YouTube video ID (yt) or any page link (link). Leave both empty for a plain tile.
+3. For each project add a YouTube video ID (yt) or any page link (link). Leave both empty and clicking the tile opens the full image.
+   Optional per project: more:["images/extra1.jpg"] adds extra images to that pop-up, vertical:true makes a YouTube Short play tall.
 4. Showreel: paste a YouTube video ID into SHOWREEL.
 -->
 <style>
@@ -62,6 +63,11 @@ h1,h2,.brand{margin:0;font-weight:800;font-stretch:62%;text-transform:uppercase;
 .filters button[aria-pressed=true]{color:var(--text);border-bottom:1px solid var(--text)}
 .filters button:focus-visible{outline:2px solid var(--text);outline-offset:3px}
 
+.pic{position:relative;display:block;aspect-ratio:var(--r,16/9);overflow:hidden;background:linear-gradient(160deg,#26262b,#141416);cursor:pointer}
+.pic::before{content:"";position:absolute;inset:-24px;background:var(--img) center/cover;filter:blur(26px) brightness(.4)}
+.pic img{position:relative;display:block;width:100%;height:100%;object-fit:contain;transition:filter .3s}
+.pic:hover img{filter:brightness(1.12)}
+.pic .cta{position:absolute;right:.75rem;bottom:.75rem;z-index:1;padding:.35rem .7rem;background:rgba(10,10,11,.75);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase}
 .block{padding:clamp(4rem,10vw,8rem) var(--pad)}
 .center{text-align:center}
 .center h2{font-size:clamp(3rem,9vw,6.5rem);margin-bottom:1.5rem}
@@ -92,6 +98,13 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
 dialog iframe{width:100%;height:100%;border:0}
 dialog form{position:absolute;top:-2.5rem;right:0}
 dialog button{all:unset;cursor:pointer;color:#fff;font-size:.8125rem;letter-spacing:.14em;text-transform:uppercase;padding:.5rem .25rem}
+dialog.v{width:auto;height:min(88vh,calc(94vw*16/9));aspect-ratio:9/16}
+#lb{width:auto;max-width:96vw;aspect-ratio:auto;background:transparent;overflow:visible}
+#lb img{display:block;max-width:94vw;max-height:78vh;margin:0 auto;object-fit:contain}
+#lbcap{padding-top:.75rem;color:var(--text);font-size:.95rem;text-align:center}
+.lbnav{position:absolute;top:50%;transform:translateY(-50%);font-size:2.5rem;line-height:1;padding:.5rem 1rem;background:rgba(10,10,11,.6)}
+#prev{left:0}
+#next{right:0}
 @media (max-width:760px){.strip{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.grid .wide{--r:16/9}.about{grid-template-columns:1fr}.spec div{grid-template-columns:1fr;gap:.25rem}.top nav{gap:1rem}}
 </style>
 </head>
@@ -170,6 +183,7 @@ dialog button{all:unset;cursor:pointer;color:#fff;font-size:.8125rem;letter-spac
 <footer>© 2026 Fady Khayat</footer>
 
 <dialog id="dlg"><form method="dialog"><button aria-label="Close video">Close</button></form><iframe id="frame" title="Project video" allow="autoplay; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></dialog>
+<dialog id="lb"><form method="dialog"><button aria-label="Close image">Close</button></form><button class="lbnav" id="prev" aria-label="Previous image">‹</button><button class="lbnav" id="next" aria-label="Next image">›</button><img id="lbimg" alt=""><div id="lbcap"></div></dialog>
 
 <script>
 /* ===== EDIT HERE ===== */
@@ -193,7 +207,7 @@ const PROJECTS = [
   {title:"3D gym virtual tour", cat:"VR tours", desc:"A dark, cinematic gym you can walk through in 360°, with a full reverse view of reception, shop area and exit.", img:"images/dark-gym-360.jpg", yt:"", link:"https://fadykhayat.github.io/3D-Gym-VirtualTour/"},
   {title:"Overgrown soda can", cat:"Environments", desc:"A soda can reclaimed by nature in an abandoned world, built in Blender and graded in Photoshop.", img:"images/overgrown-can.jpg", yt:"", link:""},
   {title:"Nike concept animation", cat:"Product CGI", desc:"A 3D concept animation created for Nike.", img:"images/nike.jpg", yt:"WoCnpJXumZQ", link:""},
-  {title:"Giant burger", cat:"FOOH & VFX", desc:"An oversized burger breaking through a building’s glass façade, with destruction simulation and animated crowd reactions.", img:"images/burger.jpg", yt:"iBRjwx8IOzk", link:""},
+  {title:"Giant burger", cat:"FOOH & VFX", desc:"An oversized burger breaking through a building’s glass façade, with destruction simulation and animated crowd reactions.", img:"images/burger.jpg", yt:"iBRjwx8IOzk", vertical:true, link:""},
   {title:"Interactive apartment tour", cat:"VR tours", desc:"A client’s floor plan turned into an interactive 4K 360° tour, modeled and textured in Blender and built in 3DVista for desktop, mobile and VR headsets.", img:"images/apartment-tour.jpg", yt:"", link:"https://fadykhayat.github.io/3DVirtualTour/"},
   {title:"F40 in the garage", cat:"Product CGI", desc:"A white F40 in a dark garage, animated to Under Vato’s “Me Fume Un Gallito”.", img:"images/f40.jpg", yt:"", link:""},
   {title:"OBSBOT Meet 2 commercial", cat:"Product CGI", desc:"A product-commercial concept with a camera inside a vending machine and a playful reveal.", img:"images/obsbot-meet2.jpg", yt:"b8raXn_Vt4Y", link:""},
@@ -221,10 +235,8 @@ function render(cat) {
   const n = list.length;
   grid.innerHTML = list.map(({p, i}, k) => {
     const wide = k % 5 === 0 || (k === n - 1 && (k % 5) % 2 === 1);
-    const act = p.yt || p.link;
-    const tile = act
-      ? `<div class="tile" role="button" tabindex="0" data-i="${i}" aria-label="Open ${esc(p.title)}" style="--img:url(${esc(p.img)})"></div>`
-      : `<div class="tile" role="img" aria-label="${esc(p.title)}" style="--img:url(${esc(p.img)})"></div>`;
+    const cta = p.yt ? "Play video" : p.link ? "Open" : "View";
+    const tile = `<div class="pic" role="button" tabindex="0" data-i="${i}" aria-label="${cta}: ${esc(p.title)}" style="--img:url(${esc(p.img)})"><img src="${esc(p.img)}" alt="" loading="lazy" onerror="this.remove()"><span class="cta">${cta}</span></div>`;
     return `<figure class="card${wide ? " wide" : ""}">${tile}<figcaption><h3>${esc(p.title)}</h3><span class="lab">${esc(p.cat)}</span><p>${esc(p.desc)}</p></figcaption></figure>`;
   }).join("");
 }
@@ -237,11 +249,24 @@ filters.addEventListener("click", e => {
 });
 render("All");
 
+const lb = $("#lb"), lbimg = $("#lbimg"), lbcap = $("#lbcap"), prevB = $("#prev"), nextB = $("#next");
+let gal = [], gi = 0, gp = null;
+function showImg() {
+  lbimg.src = gal[gi]; lbimg.alt = gp.title;
+  lbcap.textContent = gp.title + (gal.length > 1 ? "  (" + (gi + 1) + " of " + gal.length + ")" : "");
+  prevB.style.display = nextB.style.display = gal.length < 2 ? "none" : "";
+}
 function openProject(i) {
   const p = PROJECTS[i];
-  if (p.yt) { frame.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(p.yt) + "?autoplay=1&rel=0"; dlg.showModal(); }
+  if (p.yt) { dlg.classList.toggle("v", !!p.vertical); frame.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(p.yt) + "?autoplay=1&rel=0"; dlg.showModal(); }
   else if (p.link) window.open(p.link, "_blank", "noopener");
+  else { gp = p; gal = [p.img, ...(p.more || [])]; gi = 0; showImg(); lb.showModal(); }
 }
+const step = d => { gi = (gi + d + gal.length) % gal.length; showImg(); };
+prevB.addEventListener("click", () => step(-1));
+nextB.addEventListener("click", () => step(1));
+lb.addEventListener("click", e => { if (e.target === lb) lb.close(); });
+lb.addEventListener("keydown", e => { if (gal.length > 1 && e.key === "ArrowLeft") step(-1); if (gal.length > 1 && e.key === "ArrowRight") step(1); });
 grid.addEventListener("click", e => { const t = e.target.closest("[role=button]"); if (t) openProject(+t.dataset.i); });
 grid.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.matches("[role=button]")) { e.preventDefault(); openProject(+e.target.dataset.i); } });
 dlg.addEventListener("close", () => { frame.src = ""; });
